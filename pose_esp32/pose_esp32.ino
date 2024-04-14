@@ -14,22 +14,19 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 unsigned long previousMillis = 0;
 const long interval = 500;
 
-bool showCircleAnimation = true; // 控制是否显示大小圆切换动画的标志
-bool showBigCircle = true; // 控制显示大圆还是小圆
+bool showCircleAnimation = true;
+bool showBigCircle = true;
 
-bool showCross = false;           // 控制是否显示叉号的标志
-bool showCircleProgress = false;  // 控制是否显示大圆顺时针点亮动画的标志
-int currentPixel = 0;             // 当前正在处理的像素点在大圆中的位置
+bool showCross = false;
+bool showCircleProgress = false;
+int currentPixel = 0;
 
-// 大圆形的图案
 uint8_t bigCircle[8] = { 0x3C, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3C };
-// 小圆形的图案
+
 uint8_t smallCircle[8] = {0x00, 0x3C, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00};
 
-// 顺时针点亮大圆的LED顺序
 int circleProgress[20] = { 5, 4, 3, 2, 9, 16, 24, 32, 40, 49, 58, 59, 60, 61, 54, 47, 39, 31, 23, 14 };
 
-// 叉形的图案
 uint8_t cross[8] = { 0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81 };
 
 void drawCircle(bool big) {
@@ -80,9 +77,9 @@ void updateCircleProgress() {
     int pixel = circleProgress[currentPixel];
     int row = pixel / 8;
     int col = pixel % 8;
-    mx.setPoint(row, col, true);  // 点亮当前像素点
+    mx.setPoint(row, col, true);
     mx.update();
-    currentPixel = (currentPixel + 1) % 20;  // 移动到下一个像素点
+    currentPixel = (currentPixel + 1) % 20;
   }
 }
 
@@ -91,24 +88,24 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     String text = String((char*)payload).substring(0, length);
     Serial.println(text);
 
-    if (text == "预览开始") {
-      showCircleAnimation = true;  // 开启大小圆切换动画
-      showCircleProgress = false;  // 停止大圆顺时针点亮动画
-      previousMillis = millis();   // 重置计时器
-    } else if (text == "开始分析") {
-      showCircleAnimation = false;  // 停止大小圆切换动画
-      showCircleProgress = true;    // 开启大圆顺时针点亮动画
-      previousMillis = millis();    // 重置计时器用于控制像素点的点亮
-      currentPixel = 0;             // 从大圆的第一个像素点开始
-    } else if (text == "未检测到人体") {
+    if (text == "start preview") {
+      showCircleAnimation = true;
+      showCircleProgress = false;
+      previousMillis = millis();
+    } else if (text == "start analysis") {
+      showCircleAnimation = false;
+      showCircleProgress = true;
+      previousMillis = millis();
+      currentPixel = 0;
+    } else if (text == "no human detected") {
       showCross = true;
       displayCross();
       showCircleProgress = false;
-    } else if (text == "好的坐姿") {
+    } else if (text == "good posture") {
       showCircleProgress = false; 
       showCross = false;
       drawHappyFace();  
-    } else if (text == "坏的坐姿") {
+    } else if (text == "bad posture") {
       showCross = false;
       showCircleProgress = false;
       drawWarningTriangle();
@@ -141,12 +138,12 @@ void loop() {
   unsigned long currentMillis = millis();
   if (showCircleAnimation && currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-    drawCircle(showBigCircle);       // 切换大小圆
-    showBigCircle = !showBigCircle;  // 切换显示的圆形大小
+    drawCircle(showBigCircle);
+    showBigCircle = !showBigCircle;
   }
 
   if (showCircleProgress && currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-    updateCircleProgress();  // 更新大圆的顺时针点亮动画
+    updateCircleProgress();
   }
 }

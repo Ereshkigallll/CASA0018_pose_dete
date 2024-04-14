@@ -10,7 +10,7 @@ import websocket
 try:
     ws = websocket.create_connection("ws://192.168.1.100:81")
 except Exception as e:
-    print("连接WebSocket服务器失败:", e)
+    print("Fail to connect to the WebSocket:", e)
     ws = None
 
 picam2 = Picamera2()
@@ -44,11 +44,11 @@ try:
 
         if current_time - start_time < 10:
             if not preview_message_sent and ws:
-                ws.send("预览开始")
+                ws.send("start preview")
                 preview_message_sent = True
         else:
             if not analysis_started and ws:
-                ws.send("开始分析")
+                ws.send("start analysis")
                 analysis_started = True
             
             input_image = np.expand_dims(preprocessed_image, axis=0)
@@ -63,7 +63,7 @@ try:
                 pose_classifier_interpreter.invoke()
                 classification_results = pose_classifier_interpreter.get_tensor(pose_classifier_interpreter.get_output_details()[0]['index'])[0]
 
-                new_status = "好的坐姿" if classification_results[1] > classification_results[0] else "坏的坐姿"
+                new_status = "good posture" if classification_results[1] > classification_results[0] else "bad posture"
                 if new_status != current_status:
                     current_status = new_status
                     status_start_time = time.time()
@@ -72,12 +72,12 @@ try:
                         ws.send(current_status)
                     status_start_time = time.time()
             else:
-                if current_status != "未检测到人体":
-                    current_status = "未检测到人体"
+                if current_status != "no human detected":
+                    current_status = "no human detected"
                     status_start_time = time.time()
                 elif time.time() - status_start_time > status_duration_threshold:
                     if ws:
-                        ws.send("未检测到人体")
+                        ws.send("no human detected")
                     status_start_time = time.time()
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
