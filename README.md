@@ -11,3 +11,60 @@ Do you often feel muscle soreness around your neck and shoulders or discomfort i
 - LED matrix screen
 
 ## 3. How to Use
+
+### 3.1 Create Virtual Environment
+First, use the following command to clone the repository:
+
+```
+git clone https://github.com/Ereshkigallll/CASA0018_pose_dete.git
+cd CASA0018_pose_dete
+```
+
+Since installing certain Python libraries directly on the Raspberry Pi can be problematic, it is recommended to circumvent this by using a virtual environment:
+
+Let's create a virtual environment first!
+
+```
+python3 -m venv pose_dete
+```
+
+Then we need to activate it!
+
+```
+source pose_dete/bin/activate
+```
+
+If you want to quit this environment, use the command below:
+
+```
+deactivate
+```
+
+Once that's done, we can start installing the python libraries we need for this project!
+
+### 3.2 Installing Useful Libraries and Download Some Useful File
+
+Use following command to install some useful python libraries for this project:
+
+```
+sudo apt-get install python3-opencv
+pip3 install numpy
+pip3 install --extra-index-url https://google-coral.github.io/py-repo/ tflite_runtime
+pip3 install picamera2
+pip3 install websocket-client
+```
+
+ 
+In addition to this, you will need to download the following two files in this [Tensorflow sample project](https://github.com/tensorflow/examples/tree/master/lite/examples/pose_estimation/raspberry_pi): `data.py` and `utils.py`.
+
+Finally make sure that the two model files and the two files you just downloaded are in the RPi folder.
+
+After confirming that you have the same WebSocket address for the ESP8266 and the file `pi.py` on the Raspberry Pi, you can use the following commands to start running:
+
+```
+python pi.py
+```
+
+## 4. If You Want to Train Your Own Model...
+
+I have provided you with very detailed instructions in `posture.ipynb`, so you can get your own sitting posture classification model if you follow along.
