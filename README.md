@@ -14,6 +14,9 @@ Do you often feel muscle soreness around your neck and shoulders or discomfort i
 
 ## 3. How to Use
 
+### 3.1 ESP8266
+Just upload the file in the `pose_esp` folder to your ESP8266, and record the printed WebSocket address.
+
 ### 3.1 Create Virtual Environment
 First, use the following command to clone the repository:
 
