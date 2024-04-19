@@ -68,3 +68,13 @@ python pi.py
 ## 4. If You Want to Train Your Own Model...
 
 I have provided you with very detailed instructions in `posture.ipynb`, so you can get your own sitting posture classification model if you follow along.
+
+During my data collection process, I collected a total of 1000 images, 500 for good sitting posture as well as 500 for bad sitting posture. The ratio of training set, validation set and test set is 8:1:1.
+
+All photos are converted to 256*256 resolution by scaling and padding operations to meet MoveNet's data input requirements.
+
+After all the images are fed into MoveNet, according to the code MoveNet will output a CSV file containing the horizontal and vertical coordinates of the 17 key points of the human body in the image as well as the confidence scores, and my sitting posture classification model is trained on this `CSV` file.
+
+This classification model training has low hardware requirements. Since the low batch size during training ensures that the model has a high accuracy, it has low running memory as well as graphics requirements (if you are using a GPU for training).
+
+Instead, it takes relatively longer when converting images to coordinate point files via MoveNet, and a Nvidia GPU really helps a lot!
